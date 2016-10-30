@@ -8,117 +8,96 @@
     <link href="//fonts.googleapis.com/css?family=Noto+Sans:400,700" rel="stylesheet">
 </head>
 <body>
-<header role="banner" class="navbar navbar-main">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand">
-                
-            </a>
-        </div>
-        <div class="collapse navbar-collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="https://github.com/BforBen/city-analytics-dashboard">Find me on GitHub</a></li>
-            </ul>
-        </div>
-    </div>
-</header>
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="page-header">
-                <h1>Local gov analytics dashboard</h1>
+    <header role="banner" class="navbar navbar-main">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">
+                    Local Gov Analytics Dashboard
+                </span>
             </div>
-            <p>This dashboard is a simple way to show the activity on a given website, live, via the Google Analytics Real Time API.</p>
-            <p>The dashboard was designed to be a point of interest in an office, community center or city hall, rather than part of a city website.</p>
-            <section id="license">
-                <h2>License</h2>
-                <p>The Display Screen application is provided under <a href="https://github.com/codeforamerica/display-screen/blob/master/LICENSE.txt">a BSD-style license</a>.</p>
-            </section>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://github.com/BforBen/city-analytics-dashboard">Find me on GitHub</a></li>
+                </ul>
+            </div>
         </div>
-        
-    </div>
-</div>  
-	    <main id="content" class="layout-major">
-		
-		    <section id="setup">
+    </header>
 
-		        <h2>Setup</h2>
-	            <p>Setup is pretty easy, you can do it right from this page. It makes the following assumptions, however:</p>
-	            <ul>
-	            	<li>You have access to a <a href="https://www.google.com/analytics/">Google Analytics</a> account.</li>
-	            	<li>You have permission to use, or create, an account with <a href="http://heroku.com">Heroku</a>.</li>
-	            </ul>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="page-header">
+                    <h1>Local gov analytics dashboard</h1>
+                </div>
+                <p>This dashboard is a simple way to show the activity on a given website, live, via the Google Analytics Real Time API.</p>
+                <p>The dashboard was designed to be a point of interest in an office, community center or city hall, rather than part of a city website.</p>
+                <section id="license">
+                    <h2>License</h2>
+                    <p>The Display Screen application is provided under <a href="https://github.com/codeforamerica/display-screen/blob/master/LICENSE.txt">a BSD-style license</a>.</p>
+                </section>
+                <section id="setup">
+                    <h2>Setup</h2>
+                    <p>Setup is pretty easy, you can do it right from this page. It makes the following assumptions, however:</p>
+                    <ul>
+                        <li>You have access to a <a href="https://www.google.com/analytics/">Google Analytics</a> account.</li>
+                        <li>You have permission to use, or create, an account with <a href="http://heroku.com">Heroku</a>.</li>
+                    </ul>
 
-	            <h3>1. Connect To Google</h3>
-                {% if email %}
-                    <div class="alert-success">
-                      <p>
-                        Connected to Google as <b>{{ name }} ({{ email }})</b>.
-                      </p>
-                    </div>
-
-                {% else %}
-                	<div class="alert-info">
-                    <form action="/authorize-google" method="POST">
-                        <p>Connect to Google via the button below (using your email associated with your Google Analytics account).</p>
-
-                        <p><button>Connect To Google</button></p>
-                    </form>
-                   </div>
-                {% endif %}
-
-	            
-	            <form action="/prepare-app" method="POST">
-                    {% if properties %}
-               				<h3>2. Create Your Application</h3>
-               				<div class="alert-info">
-               					<p><strong>Pick a property</strong></p>
-                        <p style="overflow:hidden">
-                        <select name="property">
-                          {% for (id, name, url) in properties %}
-                            <option value="{{ id }} {{ url }}">{{ name }} ({{ url }})</option>
-                          {% endfor %}
-                        </select>
-                        </p>
-                        <p class="note">You may have more than one view setup, so select the one that will show the data for the area you want on your dashboard.</p>
-                      </div>
+                    <h3>1. Connect to Google</h3>
+                    {% if email %}
+                        <p class="text-success">Connected to Google as <strong>{{ name }} ({{ email }})</strong>.</p>
                     {% else %}
-
-                        <!--p>
-                        <select disabled>
-                            <option value="select analytics view">Select Analytics View</option>
-                        </select>
-                        </p-->
-                    {% endif %} 
-                
-
-                
-                    {% if email and client_id and client_secret and refresh_token and properties %}
-                    		<div class="alert-info">
-                    			<p><strong>Create and publish your dashboard</strong></p>
-                                
-	                        <input type="hidden" name="name" value="{{ name }}">
-	                        <input type="hidden" name="email" value="{{ email }}">
-	                        <input type="hidden" name="client_id" value="{{ client_id }}">
-	                        <input type="hidden" name="client_secret" value="{{ client_secret }}">
-	                        <input type="hidden" name="refresh_token" value="{{ refresh_token }}">
-	                        <p><button>Create Dashboard</button></p>
-	                        <p class="note">When you click <strong>Create Dashboard</strong>, you'll be taken to <a href="http://heroku.com">heroku.com</a>.  If you have an existing account, simply login as normal. If you don't yet have an account, you'll be asked to create one (for free), and then you'll continue through the automated creation process and be given the URL for your new dashboard!</p>
-	                        
-                      	</div>
-                    {% else %}
-                        <!--p><button disabled>Create Dashboard</button></p-->
+                        <form action="/authorize-google" method="POST">
+                            <p>Connect to Google via the button below (using your email associated with your Google Analytics account).</p>
+                            <p><button type="submit" class="btn btn-primary btn-lg">Connect To Google</button></p>
+                        </form>
                     {% endif %}
-	            </form>
-            </section>		
-		</main>
-<script src="https://cdn.jsdelivr.net/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+
+                    <form action="/prepare-app" method="POST">
+                        {% if properties %}
+                            <h3>2. Create your application</h3>
+                            <div class="form-group">
+                                <label for="property">Pick a Google Analytic</label>
+                                <p class="help-block">You may have more than one view setup, so select the one that will show the data for the area you want on your dashboard.</p>
+                                <select name="property" id="property" class="form-control">
+                                    {% for (id, name, url) in properties %}
+                                    <option value="{{ id }} {{ url }}">{{ name }} ({{ url }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        {% else %}
+                            <!--p>
+                                <select disabled>
+                                    <option value="select analytics view">Select Analytics View</option>
+                                </select>
+                            </p-->
+                        {% endif %} 
+
+                        {% if email and client_id and client_secret and refresh_token and properties %}
+                            <div class="alert-info">
+                                <p><strong>Create and publish your dashboard</strong></p>
+                                <input type="hidden" name="name" value="{{ name }}">
+                                <input type="hidden" name="email" value="{{ email }}">
+                                <input type="hidden" name="client_id" value="{{ client_id }}">
+                                <input type="hidden" name="client_secret" value="{{ client_secret }}">
+                                <input type="hidden" name="refresh_token" value="{{ refresh_token }}">
+                                <p><button>Create Dashboard</button></p>
+                                <p class="note">When you click <strong>Create Dashboard</strong>, you'll be taken to <a href="http://heroku.com">heroku.com</a>.  If you have an existing account, simply login as normal. If you don't yet have an account, you'll be asked to create one (for free), and then you'll continue through the automated creation process and be given the URL for your new dashboard!</p>
+                            </div>
+                        {% else %}
+                            <!--p><button disabled>Create Dashboard</button></p-->
+                        {% endif %}
+                    </form>
+                </section>
+            </div>
+        </div>
+    </div>  
+    <script src="https://cdn.jsdelivr.net/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 </body>
 </html>
