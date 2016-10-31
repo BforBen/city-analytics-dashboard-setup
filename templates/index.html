@@ -51,33 +51,23 @@
                         <li>You have permission to use, or create, an account with <a href="http://heroku.com">Heroku</a>.</li>
                     </ul>
 
-                    <h3>1. Connect to Google</h3>
                     {% if email %}
-                        <p class="text-success">Connected to Google as <strong>{{ name }} ({{ email }})</strong>.</p>
-                    {% else %}
-                        <form action="/authorize-google" method="POST">
-                            <p>Connect to Google via the button below (using the email address associated with your Google Analytics account).</p>
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary btn-lg">Connect To Google</button>
-                            </div>
-                      </form>
-                    {% endif %}
                     
                     <form action="/prepare-app" method="POST">
-                        <h3>2. Create your application</h3>
+                        <h3>Create your dashboard</h3>
                         {% if properties %}
                             <div class="form-group">
                                 <label for="property">Pick a Google Analytics property</label>
                                 <span class="help-block help-info">You may have more than one view setup, so select the one that will show the data for the area you want on your dashboard.</span>
                                 <select name="property" id="property" class="form-control">
                                     {% for (id, name, url) in properties %}
-                                    <option value="{{ id }} {{ url }}">{{ name }} ({{ url }})</option>
+                                    <option value="{{ id }} {{ url }}" data-url="{{ url }}">{{ name }} ({{ url }})</option>
                                     {% endfor %}
                                 </select>
                             </div>
                         {% endif %} 
 
-                        {% if email and client_id and client_secret and refresh_token and properties %}
+                        {% if client_id and client_secret and refresh_token and properties %}
                         <input type="hidden" name="name" value="{{ name }}">
                         <input type="hidden" name="email" value="{{ email }}">
                         <input type="hidden" name="client_id" value="{{ client_id }}">
@@ -120,6 +110,19 @@
                         </div>
                         {% endif %}
                     </form>
+                    
+                    {% else %}
+                        <form action="/authorize-google" method="POST">
+                            <h3>To begin, connect to Google</h3>
+                            <p>Connect to Google via the button below (using the email address associated with your Google Analytics account).</p>
+                            <p>This will give this web site permission to see which sites you have access to in Google Analytics, and once you have picked one, create the neccessary connection for your dashboard to load the analytics data.</p>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary btn-lg" style="background-color: #dd4b39"><span class="fa fa-google"></span> Sign in with Google</button>
+                            </div>
+                      </form>
+                    {% endif %}
+                    
+                    
                 </section>
             </div>
         </div>
