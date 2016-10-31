@@ -87,6 +87,9 @@
     color: #6f777b;
     font-size: 24px;
 }
+        section > h2 {
+            margin-top: 1em;
+        }
 section form[role="form"]
 {
     margin-top: 40px;
@@ -222,32 +225,28 @@ font-size: 19px;
                 </div>
                 <p class="lead">This dashboard is a simple way to show the activity on a given website, live, via the Google Analytics Real Time API. It was designed to be a point of interest in an office, community center or city hall, rather than part of a city website.</p>  
                 <section id="license">
-                    <h2 class="h3">License</h2>
+                    <h2 class="page-header">License</h2>
                     <p>The Display Screen application is provided under <a href="https://github.com/codeforamerica/display-screen/blob/master/LICENSE.txt">a BSD-style license</a>.</p>
                 </section>
                 <section id="setup">
-                    <h2>Setup</h2>
+                    <h2 class="page-header">Setup</h2>
                     <p>Setup is pretty easy, you can do it right from this page. It makes the following assumptions, however:</p>
                     <ul>
                         <li>You have access to a <a href="https://www.google.com/analytics/">Google Analytics</a> account.</li>
                         <li>You have permission to use, or create, an account with <a href="http://heroku.com">Heroku</a>.</li>
                     </ul>
 
-                    <div class="callout {% if email %}callout-success{% else %}callout-info{% endif %}">
-                        <h4>1. Connect to Google</h4>
-                        {% if email %}
-                            <p>Connected to Google as <strong>{{ name }} ({{ email }})</strong>.</p>
-                        {% else %}
-                            <form action="/authorize-google" method="POST">
-                                <div class="form-group">
-                                    Connect to Google via the button below (using the email address associated with your Google Analytics account).
-                                </div>
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-primary btn-lg">Connect To Google</button>
-                                </div>
-                          </form>
-                        {% endif %}
-                    </div>
+                    <h3>1. Connect to Google</h3>
+                    {% if email %}
+                        <p class="text-success">Connected to Google as <strong>{{ name }} ({{ email }})</strong>.</p>
+                    {% else %}
+                        <form action="/authorize-google" method="POST">
+                            <p>Connect to Google via the button below (using the email address associated with your Google Analytics account).</p>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary btn-lg">Connect To Google</button>
+                            </div>
+                      </form>
+                    {% endif %}
                     
                     <form action="/prepare-app" method="POST">
                         {% if properties %}
