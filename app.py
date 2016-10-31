@@ -40,9 +40,9 @@ class SetupError (Exception):
 app = Flask(__name__)
 heroku = Heroku(app)
 
-app.config['SEND_EMAIL'] = False
-app.config['EMAIL_RECIPIENT'] = 'analytics-dashboard@codeforamerica.org'
-app.config['EMAIL_SENDER'] = 'mike@codeforamerica.org'
+app.config['SEND_EMAIL'] = environ['SEND_EMAIL']
+app.config['EMAIL_RECIPIENT'] = environ['EMAIL_RECIPIENT']
+app.config['EMAIL_SENDER'] = environ['EMAIL_SENDER']
 
 logger = logging.getLogger('noteworthy')
 logger.setLevel(logging.DEBUG)
@@ -51,10 +51,10 @@ handler1 = logging.StreamHandler(sys.stderr)
 handler1.setLevel(logging.DEBUG)
 logger.addHandler(handler1)
 
-if 'SENDGRID_USERNAME' in environ and 'SENDGRID_PASSWORD' in environ:
-    app.config['SMTP_USERNAME'] = environ['SENDGRID_USERNAME']
-    app.config['SMTP_PASSWORD'] = environ['SENDGRID_PASSWORD']
-    app.config['SMTP_HOSTNAME'] = 'smtp.sendgrid.net'
+if 'SMTP_USERNAME' in environ and 'SMTP_PASSWORD' in environ:
+    app.config['SMTP_USERNAME'] = environ['SMTP_USERNAME']
+    app.config['SMTP_PASSWORD'] = environ['SMTP_PASSWORD']
+    app.config['SMTP_HOSTNAME'] = environ['SMTP_HOSTNAME']
     app.config['SEND_EMAIL'] = True
     
     handler2 = SMTPHandler(app.config['SMTP_HOSTNAME'], app.config['EMAIL_SENDER'],
@@ -70,7 +70,7 @@ def on_setuperror(error):
     '''
     '''
     logger.error('City Analytics Dashboard - Heroku error', exc_info=True)
-    values = dict(style_base=get_style_base(request), message=error.message)
+    values = dict(message=error.message)
     return make_response(render_template('error.html', **values), 400)
 
 @app.route("/")
@@ -82,11 +82,11 @@ def index():
     scheme, host = get_scheme(request), request.host
     
     if scheme == 'http' and host[:9] not in ('localhost', '127.0.0.1'):
-        return redirect('https://dashboard-setup.codeforamerica.org')
+        return redirect('https://lganalytics-dashboard-setup.herokuapp.com')
     
-    logger.debug('GET / {}'.format(get_style_base(request)))
+    logger.debug('GET / {}')
 
-    return render_template('index.html', style_base=get_style_base(request))
+    return render_template('index.html')
 
 @app.route('/authorize-google', methods=['POST'])
 def authorize_google():
@@ -128,12 +128,12 @@ def callback_google():
     
     except SetupError, e:
         logger.error('City Analytics Dashboard - Google error', exc_info=True)
-        values = dict(style_base=get_style_base(request), message=e.message)
+        values = dict(message=e.message)
         return make_response(render_template('error.html', **values), 400)
     
     values = dict(client_id=client_id, client_secret=client_secret,
                   refresh_token=refresh_token, properties=properties,
-                  style_base=get_style_base(request), name=name, email=email)
+                  name=name, email=email)
     
     logger.debug('GET /callback-google {}'.format(values))
 
@@ -232,7 +232,7 @@ def callback_heroku():
         wait_url = '{0}://{1}/{2}/wait-for-heroku'.format(get_scheme(request), request.host, tar_id)
         return redirect(wait_url)
         
-        return render_template('done.html', style_base=get_style_base(request),
+        return render_template('done.html',
                                settings_url=builders.heroku_app_activity_template.format(app_name),
                                application_url=builders.heroku_app_direct_template.format(app_name),
                                app_name=app_name)
@@ -241,7 +241,7 @@ def callback_heroku():
     
     except SetupError, e:
         logger.error('City Analytics Dashboard - Heroku error', exc_info=True)
-        values = dict(style_base=get_style_base(request), message=e.message)
+        values = dict(message=e.message)
         return make_response(render_template('error.html', **values), 400)
 
 @app.route('/<int:conn_id>/wait-for-heroku')
@@ -256,7 +256,7 @@ def wait_for_heroku(conn_id):
     finished = builders.check_app(builders.get_http_client(), access_token, app_setup_id)
     
     if not finished:
-        return render_template('wait.html', style_base=get_style_base(request),
+        return render_template('wait.html',
                                url=request.path)
     
     finished_url = '{0}://{1}/{2}/finished'.format(get_scheme(request), request.host, conn_id)
@@ -270,7 +270,7 @@ def heroku_complete(conn_id):
         with connection.cursor() as cursor:
             app_name = builders.get_connection_datum(cursor, conn_id, 'app_name')
 
-    return render_template('done.html', style_base=get_style_base(request),
+    return render_template('done.html',
                            settings_url=builders.heroku_app_activity_template.format(app_name),
                            application_url=builders.heroku_app_direct_template.format(app_name),
                            app_name=app_name)
@@ -282,14 +282,6 @@ def get_scheme(request):
         return request.headers['x-forwarded-proto']
     
     return request.scheme
-
-def get_style_base(request):
-    ''' Get the correct style base URL for the current scheme.
-    '''
-    if get_scheme(request) == 'https':
-        return 'https://style.codeforamerica.org/1'
-    
-    return 'http://style.codeforamerica.org/1'
 
 def get_google_access_token(data):
     ''' Get access token from Google API.
@@ -351,26 +343,7 @@ def google_client_info(request):
     '''
     scheme, host = get_scheme(request), request.host
     
-    if (scheme, host) == ('http', 'localhost:5000'):
-        id, secret = "422651909980-7stoc5hn9nfrv9l9otrnf8tjei0lm68q.apps.googleusercontent.com", "qZ511l73AqF0K8sX6g2wSTMG"
-
-    elif (scheme, host) == ('https', 'p1510.s.codeforamerica.org'):
-        id, secret = "422651909980-knbfgd83krqiom0f28857d2o36hje8nk.apps.googleusercontent.com", "FADu5Ds5ZkcnwdM1mHn6jp1M"
-
-    elif (scheme, host) == ('https', 'dashboard-setup.codeforamerica.org'):
-        id, secret = "422651909980-fpg37u85pf1rnn8jselp8cl7fhibims8.apps.googleusercontent.com", "QAxrxk21Y4zT0MLkJ99HzUYj"
-
-    elif (scheme, host) == ('https', 'dfd-dashboard-setup.herokuapp.com'):
-        id, secret = "422651909980-cm38qtgra61jub0c9uiis3qoc2lhasse.apps.googleusercontent.com", "qk2SIzRSn-_6MZpNdhUGQnJL"
-
-    elif (scheme, host) == ('https', 'dfd-dashboard-development.herokuapp.com'):
-        id, secret = "422651909980-442b6sh4e985n1jpuduu8cd0se5sk7it.apps.googleusercontent.com", "S2aIyD_2UclYgpJyHk1zlW7d"
-
-    elif (scheme, host) == ('https', 'lganalytics-dashboard-setup.herokuapp.com'):
-        id, secret = "618509553658-td81ua25bqhb5tnv7hgf9ocdfrl4ep75.apps.googleusercontent.com", "WHrIL8fZ-DStUl4X6kukXgv2"
-        
-    else:
-        raise Exception('You know nothing of {0}://{1}, Google'.format(scheme, host))
+    id, secret = environ['GOOGLE_ID'], environ['GOOGLE_SECRET']
 
     return id, secret, '{0}://{1}/callback-google'.format(scheme, host)
 
@@ -379,26 +352,7 @@ def heroku_client_info(request):
     '''
     scheme, host = get_scheme(request), request.host
     
-    if (scheme, host) == ('http', 'localhost:5000'):
-        id, secret = "e46e254a-d99e-47c1-83bd-f9bc9854d467", "8cfd15f1-89b6-4516-9650-ce6650c78b4c"
-
-    elif (scheme, host) == ('https', 'p1510.s.codeforamerica.org'):
-        id, secret = "560b2e3e-bdf1-4e24-9373-e0a0b5b3474d", "bb8cec74-8398-4077-acda-a891b76df398"
-
-    elif (scheme, host) == ('https', 'dashboard-setup.codeforamerica.org'):
-        id, secret = "abc6f200-db5f-4845-9b4f-80fa6e892bc1", "263257ea-4d1f-42b2-8329-85dc7004aeda"
-
-    elif (scheme, host) == ('https', 'dfd-dashboard-setup.herokuapp.com'):
-        id, secret = "e422c58c-aa9d-4fec-8bc2-66c859e2f5df", "9fffa26f-5202-4bce-b139-e4b227690b53"
-
-    elif (scheme, host) == ('https', 'dfd-dashboard-development.herokuapp.com'):
-        id, secret = "74e2723b-624d-4616-ab6a-c7736b4f027e", "9d25949e-4a96-4ab8-a8dc-203fd7801d2c"
-
-    elif (scheme, host) == ('https', 'lganalytics-dashboard-setup.herokuapp.com'):
-        id, secret = "0beac825-434f-450f-a1af-3e220f67c234", "f3978fd0-85dd-4f6a-a350-c7563bad602a"
-
-    else:
-        raise Exception('You know nothing of {0}://{1}, Heroku'.format(scheme, host))
+    id, secret = environ['HEROKU_ID'], environ['HEROKU_SECRET']
 
     return id, secret, '{0}://{1}/callback-heroku'.format(scheme, host)
 
