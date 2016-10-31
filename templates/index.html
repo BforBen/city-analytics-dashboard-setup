@@ -87,7 +87,7 @@
     color: #6f777b;
     font-size: 24px;
 }
-.article form[role="form"]
+section form[role="form"]
 {
     margin-top: 40px;
 }
@@ -233,18 +233,22 @@ font-size: 19px;
                         <li>You have permission to use, or create, an account with <a href="http://heroku.com">Heroku</a>.</li>
                     </ul>
 
-                    <h3>1. Connect to Google</h3>
-                    {% if email %}
-                        <p class="text-success">Connected to Google as <strong>{{ name }} ({{ email }})</strong>.</p>
-                    {% else %}
-                        <form action="/authorize-google" method="POST">
-			            <div class="form-group">
-                            <span class="help-block">Connect to Google via the button below (using the email address associated with your Google Analytics account).</span>
-                            <button type="submit" class="btn btn-primary btn-lg">Connect To Google</button>
-                        </div>
-                      </form>
-                    {% endif %}
-
+                    <div class="callout {% if email %}callout-success{% else %}callout-info{% endif %}">
+                        <h4>1. Connect to Google</h4>
+                        {% if email %}
+                            <p>Connected to Google as <strong>{{ name }} ({{ email }})</strong>.</p>
+                        {% else %}
+                            <form action="/authorize-google" method="POST">
+                                <div class="form-group">
+                                    Connect to Google via the button below (using the email address associated with your Google Analytics account).
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary btn-lg">Connect To Google</button>
+                                </div>
+                          </form>
+                        {% endif %}
+                    </div>
+                    
                     <form action="/prepare-app" method="POST">
                         {% if properties %}
                             <h3>2. Create your application</h3>
