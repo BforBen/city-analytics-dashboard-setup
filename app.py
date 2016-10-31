@@ -21,7 +21,7 @@ import oauth2, psycopg2
 
 import builders
 
-display_screen_tarball_url = 'https://github.com/codeforamerica/city-analytics-dashboard/tarball/master/'
+display_screen_tarball_url = 'https://github.com/BforBen/city-analytics-dashboard/tarball/master/'
 
 google_authorize_url = 'https://accounts.google.com/o/oauth2/auth'
 google_access_token_url = 'https://accounts.google.com/o/oauth2/token'
@@ -366,6 +366,9 @@ def google_client_info(request):
     elif (scheme, host) == ('https', 'dfd-dashboard-development.herokuapp.com'):
         id, secret = "422651909980-442b6sh4e985n1jpuduu8cd0se5sk7it.apps.googleusercontent.com", "S2aIyD_2UclYgpJyHk1zlW7d"
 
+    elif (scheme, host) == ('https', 'lganalytics-dashboard-setup.herokuapp.com'):
+        id, secret = "618509553658-td81ua25bqhb5tnv7hgf9ocdfrl4ep75.apps.googleusercontent.com", "WHrIL8fZ-DStUl4X6kukXgv2"
+        
     else:
         raise Exception('You know nothing of {0}://{1}, Google'.format(scheme, host))
 
