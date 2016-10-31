@@ -36,18 +36,14 @@
         <div class="row">
             <div class="col-xs-12">
                 <div class="page-header">
-                    <h1>Local Gov Analytics Dashboard</h1>
-                </div>
-				
-				<div class="callout callout-error">
-					<h4>Something isn't quite right!</h4>
-					<p>{{ message }}</p>
-					{% if 'limit of 5 apps for unverified accounts' in message %}
-					<p>Return to <a href="/">step one</a> and start again.</p>
-					{% else %}
-					<p>You should try starting again from <a href="/">step one</a>. If you keep seeing this error, send us an email and include the address of this page: <em>tech@codeforamerica.org</em>.</p>
-					{% endif %}
-				</div>
+                    <h1>Something isn't quite right!</h1>
+		</div>
+		<p class="lead">{{ message }}</p>
+		{% if 'limit of 5 apps for unverified accounts' in message %}
+		<p class="lead">Return to <a href="/">step one</a> and start again.</p>
+		{% else %}
+		<p class="lead">You should try starting again from <a href="/">step one</a>. If you keep seeing this error, send us an email and include the address of this page: <em></em>.</p>
+		{% endif %}
             </div>
         </div>
     </div>
