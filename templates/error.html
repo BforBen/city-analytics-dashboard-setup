@@ -1,78 +1,57 @@
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="utf-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    
-    <title>Code for America Analytics Dashboard</title>
-    
-    <link rel="stylesheet" type="text/css" href="//cloud.webtype.com/css/944a7551-9b08-4f0a-8767-e0f83db4a16b.css" />
-    
-    <!-- The light version of the main CFA stylesheet -->
-	<link rel="stylesheet" href="{{ style_base }}/style/css/cfa-light.css">
-	
-	<link rel="stylesheet" href="{{ style_base }}/style/css/layout.css" media="all and (min-width: 40em)">
-	
-	<!--[if lt IE 9]>
-	    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
-	
-	<!--[if (lt IE 9)&(gt IE 6)&(!IEMobile)]>
-	<link rel="stylesheet" href="../style/css/layout.css" media="all">
-	<![endif]-->
-	
-	<!-- (Optional) A plugin that adds syntax highlighting to code samples -->
-	<link href="{{ style_base }}/style/css/prism.css" rel="stylesheet" />
-	
-	<!-- Link to a 32x32 favicon -->
-	<link rel="shortcut icon" type="image/x-icon" href="{{ style_base }}/favicon.ico">
-	
-	<!-- (Optional) Link to a 60x60 bookmark icon for iOS -->
-	<link rel="apple-touch-icon-precomposed" href="{{ style_base }}/style/favicons/60x60/flag-red.png"/>
-	
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Gov Analytics Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
+    <link href="//fonts.googleapis.com/css?family=Noto+Sans:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.6.3/css/font-awesome.min.css" integrity="sha256-AIodEDkC8V/bHBkfyxzolUMw57jeQ9CauwhVW6YJ9CA=" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/style.css">
+    <meta name="theme-color" content="#132756">
 </head>
-
-
-
 <body>
+    <header role="banner" class="navbar navbar-main">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">
+                    Local Gov Analytics Dashboard
+                </span>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://github.com/BforBen/city-analytics-dashboard">Find me on GitHub</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
 
-	<div class="layout-semibreve">
-	
-		<header class="heading">
-	  	<h1>Code for America Analytics Dashboard</h1>
-	  </header>
-	    
-	    
-	    <main id="content" class="layout-major">
-		    <section>
-
-		        <h2>Something isn’t quite right!</h2>
-		        <div class="alert-failure">
-		            <p>{{ message }}</p>
-		            {% if 'limit of 5 apps for unverified accounts' in message %}
-		                <p>Return to <a href="/">step one</a> and start again.</p>
-		            {% else %}
-                        <p>
-                            You should try starting again from <a href="/">step one</a>.
-                            If you keep seeing this error, send us an email and include
-                            the address of this page: <em>tech@codeforamerica.org</em>.
-                        </p>
-		            {% endif %}
-		        </div>
-
-		    </section>
-		</main>
-	
-	</div>
-
-
-    
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="page-header">
+                    <h1>Local Gov Analytics Dashboard</h1>
+                </div>
+				
+				<div class="callout callout-error">
+					<h4>Something isn't quite right!</h4>
+					<p>{{ message }}</p>
+					{% if 'limit of 5 apps for unverified accounts' in message %}
+					<p>Return to <a href="/">step one</a> and start again.</p>
+					{% else %}
+					<p>You should try starting again from <a href="/">step one</a>. If you keep seeing this error, send us an email and include the address of this page: <em>tech@codeforamerica.org</em>.</p>
+					{% endif %}
+				</div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 </body>
-
-<script src="//style.codeforamerica.org/script/prism.js"></script>
-
 </html>
