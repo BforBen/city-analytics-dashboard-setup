@@ -64,7 +64,7 @@ if 'SMTP_USERNAME' in environ and 'SMTP_PASSWORD' in environ:
     app.config['SEND_EMAIL'] = True
     
     handler2 = SMTPHandler(app.config['SMTP_HOSTNAME'], app.config['EMAIL_SENDER'],
-                           (app.config['EMAIL_RECIPIENT'], app.config['EMAIL_SENDER']),
+                           (app.config['EMAIL_RECIPIENT']),
                            'City Analytics Dashboard error report',
                            (app.config['SMTP_USERNAME'], app.config['SMTP_PASSWORD']))
 
