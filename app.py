@@ -16,7 +16,7 @@ from logging.handlers import SMTPHandler
 
 from flask import Flask, request, redirect, render_template, jsonify, send_file, make_response
 from requests import get, post, Session
-from flask.ext.heroku import Heroku
+from flask_heroku import Heroku
 import oauth2, psycopg2
 
 import builders
@@ -43,6 +43,12 @@ heroku = Heroku(app)
 app.config['SEND_EMAIL'] = environ['SEND_EMAIL']
 app.config['EMAIL_RECIPIENT'] = environ['EMAIL_RECIPIENT']
 app.config['EMAIL_SENDER'] = environ['EMAIL_SENDER']
+
+app.config['SQLALCHEMY_DATABASE_URI'] = environ['DATABASE_URL']
+
+with psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI']) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(open("schema.pgsql", "r").read())
 
 logger = logging.getLogger('noteworthy')
 logger.setLevel(logging.DEBUG)
@@ -81,7 +87,7 @@ def index():
     '''
     scheme, host = get_scheme(request), request.host
     
-    if scheme == 'http' and host[:9] not in ('localhost', '127.0.0.1'):
+    if scheme == 'http' and host[:9] not in ('localhost', '127.0.0.1','city-analytics-dashboard-setup-bforben.c9users.io'):
         return redirect('https://lganalytics-dashboard-setup.herokuapp.com')
     
     logger.debug('GET / {}')
@@ -148,14 +154,25 @@ def prepare_app():
     client_id = request.form.get('client_id')
     client_secret = request.form.get('client_secret')
     refresh_token = request.form.get('refresh_token')
+
+    app_title = request.form.get('app_title')
+    organisation_name = request.form.get('organisation_name')
+    shortcut_icon = request.form.get('shortcut_icon')
+    theme_colour = request.form.get('theme_colour')
+    title_filter = request.form.get('title_filter')
     
     env = dict(LANG='en_US.UTF-8', RACK_ENV='production',
                GA_VIEW_ID=view_id, GA_WEBSITE_URL=website_url,
                CLIENT_ID=client_id, CLIENT_SECRET=client_secret,
-               REFRESH_TOKEN=refresh_token)
+               REFRESH_TOKEN=refresh_token,
+               APP_TITLE=app_title, ORGANISATION_NAME=organisation_name,
+               SHORTCUT_ICON=shortcut_icon, THEME_COLOUR=theme_colour,
+               TITLE_FILTER=title_filter)
     
     tarpath = prepare_tarball(display_screen_tarball_url,
                               dict(name='Display Screen', env=env))
+    
+    logger.debug('GET /prepare-app {}'.format(app.config))
     
     with psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI']) as connection:
         with connection.cursor() as cursor:
@@ -383,11 +400,8 @@ def prepare_tarball(url, app):
 
 if __name__ == '__main__':
     if sys.argv[-1] == 'ssl':
-        from OpenSSL import SSL
-        context = SSL.Context(SSL.SSLv23_METHOD)
-        context.use_privatekey_file('ssl/server.key')
-        context.use_certificate_file('ssl/server.crt')
+        context = ('ssl/server.crt', 'ssl/server.key')
     else:
         context = None
 
-    app.run(host='localhost', port=5000, debug=True, ssl_context=context)
+    app.run(host='0.0.0.0', port=5000, debug=True, ssl_context=context)

@@ -1,7 +1,4 @@
-DROP TABLE connections;
-DROP TABLE tarballs;
-
-CREATE TABLE connections
+CREATE TABLE IF NOT EXISTS connections
 (
     id              SERIAL PRIMARY KEY,
     
@@ -9,16 +6,14 @@ CREATE TABLE connections
     profile_name    TEXT,
     website_url     TEXT,
 
-    connected_at    TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+    connected_at    TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    
+    data JSON DEFAULT '{}'::JSON
 );
 
-CREATE TABLE tarballs
+CREATE TABLE IF NOT EXISTS tarballs
 (
     id          INT REFERENCES connections(id),
     contents    BYTEA,
     created_at  TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
-
---
-
-ALTER TABLE connections ADD COLUMN data JSON DEFAULT '{}'::JSON;
