@@ -155,7 +155,6 @@ def prepare_app():
     client_secret = request.form.get('client_secret')
     refresh_token = request.form.get('refresh_token')
 
-    app_title = request.form.get('app_title')
     organisation_name = request.form.get('organisation_name')
     shortcut_icon = request.form.get('shortcut_icon')
     theme_colour = request.form.get('theme_colour')
@@ -165,7 +164,7 @@ def prepare_app():
                GA_VIEW_ID=view_id, GA_WEBSITE_URL=website_url,
                CLIENT_ID=client_id, CLIENT_SECRET=client_secret,
                REFRESH_TOKEN=refresh_token,
-               APP_TITLE=app_title, ORGANISATION_NAME=organisation_name,
+               ORGANISATION_NAME=organisation_name,
                SHORTCUT_ICON=shortcut_icon, THEME_COLOUR=theme_colour,
                TITLE_FILTER=title_filter)
     
