@@ -75,20 +75,14 @@
                         <input type="hidden" name="refresh_token" value="{{ refresh_token }}">
                         
                         <div class="form-group">
-                            <label for="app_title">Application title</label>
-                            <span class="help-block help-info">This will be displayed in the browser's title bar</span>
-                            <input type="text" class="form-control" id="app_title" name="app_title" placeholder="">
-                        </div>
-                        
-                        <div class="form-group">
                             <label for="organisation_name">Organisation name</label>
                             <span class="help-block help-info">This will be displayed in the navigation bar at the top of the page.</span>
-                            <input type="text" class="form-control" id="organisation_name" name="organisation_name" placeholder="">
+                            <input type="text" class="form-control" id="organisation_name" name="organisation_name" placeholder="" required>
                         </div>
                         
                         <div class="form-group">
                             <label for="shortcut_icon">Favourite icon URL</label>
-                            <span class="help-block help-info"></span>
+                            <span class="help-block help-info">Set to the URL of your icon.</span>
                             <input type="url" class="form-control" id="shortcut_icon" name="shortcut_icon" placeholder="">
                         </div>
                         
@@ -98,10 +92,10 @@
                             <input type="color" class="form-control" id="theme_colour" name="theme_colour" value="">
                         </div>
                         
-                        <div class="form-group">
+                        <div class="form-group hide">
                             <label for="title_filter">Title filter</label>
                             <span class="help-block help-info"></span>
-                            <input type="text" class="form-control" id="title_filter" name="title_filter" value=" | ">
+                            <input type="text" class="form-control" id="title_filter" name="title_filter" value=" | " readonly>
                         </div>
 
                         <div class="form-group">
