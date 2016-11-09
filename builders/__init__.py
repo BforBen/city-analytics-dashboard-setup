@@ -26,7 +26,7 @@ def get_http_client():
 def create_app(client, access_token, source_url):
     ''' Create a Heroku application based on a tarball URL, return its setup ID and name.
     '''
-    app = {'stack': 'cedar', 'region': 'eu', 'name': 'lg-analytics-{}'.format(str(uuid4())[:8])}
+    app = {'stack': 'cedar', 'name': 'lg-analytics-{}'.format(str(uuid4())[:8])}
     data = json.dumps({'source_blob': {'url': source_url}, 'app': app});
 
     headers = {'Content-Type': 'application/json',
