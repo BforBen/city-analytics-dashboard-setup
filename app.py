@@ -155,10 +155,10 @@ def prepare_app():
     client_secret = request.form.get('client_secret')
     refresh_token = request.form.get('refresh_token')
 
-    organisation_name = request.form.get('organisation_name')
-    shortcut_icon = request.form.get('shortcut_icon')
-    theme_colour = request.form.get('theme_colour')
-    title_filter = request.form.get('title_filter')
+    organisation_name = request.form.get('organisation_name', 'LG Analytics Dashboard')
+    shortcut_icon = request.form.get('shortcut_icon', 'data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQEAYAAABPYyMiAAAABmJLR0T///////8JWPfcAAAACXBIWXMAAABIAAAASABGyWs+AAAAF0lEQVRIx2NgGAWjYBSMglEwCkbBSAcACBAAAeaR9cIAAAAASUVORK5CYII=')
+    theme_colour = request.form.get('theme_colour', '#212121')
+    title_filter = request.form.get('title_filter', ' | ')
     
     env = dict(LANG='en_US.UTF-8', RACK_ENV='production',
                GA_VIEW_ID=view_id, GA_WEBSITE_URL=website_url,
@@ -239,11 +239,11 @@ def callback_heroku():
         
         try:
             if app.config['SEND_EMAIL']:
-                fromaddr, toaddr = app.config['EMAIL_SENDER'], app.config['EMAIL_RECIPIENT']
+                fromaddr, toaddr = app.config['EMAIL_RECIPIENT']
                 msg = 'From: {fromaddr}\r\nTo: {toaddr}\r\nCc: {fromaddr}\r\nSubject: City Analytics Dashboard got used\r\n\r\n{google_name} {google_email} at https://{app_name}.herokuapp.com for {google_url}.'.format(**locals())
                 builders.send_email(fromaddr, toaddr, msg, app.config)
         except:
-            logger.error('City Analytics Dashboard - SMTP error', exc_info=True)
+            logger.error('Local Gov Analytics Dashboard - SMTP error', exc_info=True)
 
         wait_url = '{0}://{1}/{2}/wait-for-heroku'.format(get_scheme(request), request.host, tar_id)
         return redirect(wait_url)
@@ -256,7 +256,7 @@ def callback_heroku():
         return redirect(builders.heroku_app_activity_template.format(app_name))
     
     except SetupError, e:
-        logger.error('City Analytics Dashboard - Heroku error', exc_info=True)
+        logger.error('Local Gov Analytics Dashboard - Heroku error', exc_info=True)
         values = dict(message=e.message)
         return make_response(render_template('error.html', **values), 400)
 
