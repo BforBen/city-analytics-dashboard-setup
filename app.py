@@ -156,7 +156,7 @@ def prepare_app():
     refresh_token = request.form.get('refresh_token')
 
     organisation_name = request.form.get('organisation_name', 'LG Analytics Dashboard')
-    shortcut_icon = request.form.get('shortcut_icon', 'data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQEAYAAABPYyMiAAAABmJLR0T///////8JWPfcAAAACXBIWXMAAABIAAAASABGyWs+AAAAF0lEQVRIx2NgGAWjYBSMglEwCkbBSAcACBAAAeaR9cIAAAAASUVORK5CYII=')
+    shortcut_icon = request.form.get('shortcut_icon', 'https://lganalytics-dashboard-setup.herokuapp.com/favicon.ico')
     theme_colour = request.form.get('theme_colour', '#212121')
     title_filter = request.form.get('title_filter', ' | ')
     
@@ -239,8 +239,8 @@ def callback_heroku():
         
         try:
             if app.config['SEND_EMAIL']:
-                fromaddr, toaddr = app.config['EMAIL_RECIPIENT']
-                msg = 'From: {fromaddr}\r\nTo: {toaddr}\r\nCc: {fromaddr}\r\nSubject: City Analytics Dashboard got used\r\n\r\n{google_name} {google_email} at https://{app_name}.herokuapp.com for {google_url}.'.format(**locals())
+                fromaddr, toaddr = app.config['EMAIL_RECIPIENT'], app.config['EMAIL_SENDER']
+                msg = 'From: {fromaddr}\r\nTo: {toaddr}\r\nSubject: City Analytics Dashboard got used\r\n\r\n{google_name} {google_email} at https://{app_name}.herokuapp.com for {google_url}.'.format(**locals())
                 builders.send_email(fromaddr, toaddr, msg, app.config)
         except:
             logger.error('Local Gov Analytics Dashboard - SMTP error', exc_info=True)
