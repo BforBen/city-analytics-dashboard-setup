@@ -1,3 +1,4 @@
+
 import sys, json
 
 from urllib import urlencode
@@ -40,7 +41,7 @@ class SetupError (Exception):
 app = Flask(__name__)
 heroku = Heroku(app)
 
-app.config['SEND_EMAIL'] = environ['SEND_EMAIL']
+app.config['SEND_EMAIL'] = False
 app.config['EMAIL_RECIPIENT'] = environ['EMAIL_RECIPIENT']
 app.config['EMAIL_SENDER'] = environ['EMAIL_SENDER']
 
@@ -61,7 +62,7 @@ if 'SMTP_USERNAME' in environ and 'SMTP_PASSWORD' in environ:
     app.config['SMTP_USERNAME'] = environ['SMTP_USERNAME']
     app.config['SMTP_PASSWORD'] = environ['SMTP_PASSWORD']
     app.config['SMTP_HOSTNAME'] = environ['SMTP_HOSTNAME']
-    app.config['SEND_EMAIL'] = True
+    app.config['SEND_EMAIL'] = environ['SEND_EMAIL']
     
     handler2 = SMTPHandler(app.config['SMTP_HOSTNAME'], app.config['EMAIL_SENDER'],
                            (app.config['EMAIL_RECIPIENT']),
@@ -87,7 +88,7 @@ def index():
     '''
     scheme, host = get_scheme(request), request.host
     
-    if scheme == 'http' and host[:9] not in ('localhost', '127.0.0.1','city-analytics-dashboard-setup-bforben.c9users.io'):
+    if scheme == 'http' and host[:9] not in ('localhost', '127.0.0.1','city-anal'):
         return redirect('https://lganalytics-dashboard-setup.herokuapp.com')
     
     logger.debug('GET / {}')
@@ -156,7 +157,7 @@ def prepare_app():
     refresh_token = request.form.get('refresh_token')
 
     organisation_name = request.form.get('organisation_name', 'LG Analytics Dashboard')
-    shortcut_icon = request.form.get('shortcut_icon', 'https://lganalytics-dashboard-setup.herokuapp.com/favicon.ico')
+    shortcut_icon = request.form.get('shortcut_icon', '/favicon.ico')
     theme_colour = request.form.get('theme_colour', '#212121')
     title_filter = request.form.get('title_filter', ' | ')
     
@@ -171,7 +172,7 @@ def prepare_app():
     tarpath = prepare_tarball(display_screen_tarball_url,
                               dict(name='Display Screen', env=env))
     
-    logger.debug('GET /prepare-app {}'.format(app.config))
+    logger.debug('GET /prepare-app {} {}'.format(app.config, env))
     
     with psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI']) as connection:
         with connection.cursor() as cursor:
