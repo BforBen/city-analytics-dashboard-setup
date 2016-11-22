@@ -161,6 +161,20 @@ def prepare_app():
     theme_colour = request.form.get('theme_colour', '#212121')
     title_filter = request.form.get('title_filter', ' | ')
     
+    # Make sure these vars have values
+    
+    if not (organisation_name and organisation_name.strip()):
+        organisation_name = 'LG Analytics Dashboard'
+    
+    if not (shortcut_icon and shortcut_icon.strip()):
+        shortcut_icon = '/favicon.ico'
+    
+    if not (theme_colour and theme_colour.strip()):
+        theme_colour = '#212121'
+    
+    if not (title_filter and title_filter.strip()):
+        title_filter = ' | '
+    
     env = dict(LANG='en_US.UTF-8', RACK_ENV='production',
                GA_VIEW_ID=view_id, GA_WEBSITE_URL=website_url,
                CLIENT_ID=client_id, CLIENT_SECRET=client_secret,
@@ -404,4 +418,4 @@ if __name__ == '__main__':
     else:
         context = None
 
-    app.run(host='0.0.0.0', port=5000, debug=True, ssl_context=context)
+    app.run(host='0.0.0.0', port=8080, debug=True, ssl_context=context)
